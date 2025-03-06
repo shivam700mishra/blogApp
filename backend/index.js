@@ -54,8 +54,18 @@ app.get("/api/test", (req, res) => {
 const allowedOrigins = [
     "https://blog-app-ivory-eight.vercel.app", // Frontend URL
     "https://blog-app-ivory-eight.vercel.app/" // Extra check for trailing slash issues
+    
   ];
   
+  connectDB(); 
+  const PORT = process.env.PORT || 5000;
+  
+  app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  
+
+
   app.use(
     cors({
       origin: (origin, callback) => {
@@ -81,27 +91,34 @@ app.use("/api/comments",commentRoute)
 
 
 //image upload
-const storage=multer.diskStorage({
-    destination:(req,file,fn)=>{
-        fn(null,"images")
-    },
-    filename:(req,file,fn)=>{
-        fn(null,req.body.img)
-        // fn(null,"image1.jpg")
-    }
-})
+// const storage=multer.diskStorage({
+//     destination:(req,file,fn)=>{
+//         fn(null,"images")
+//     },
+//     filename:(req,file,fn)=>{
+//         fn(null,req.body.img)
+//         // fn(null,"image1.jpg")
+//     }
+// })
 
-const upload=multer({storage:storage})
-app.post("/api/upload",upload.single("file"),(req,res)=>{
-    // console.log(req.body)
-    res.status(200).json("Image has been uploaded successfully!")
-})
-connectDB(); 
-const PORT = process.env.PORT || 5000;
+// const upload=multer({storage:storage})
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+const upload = multer({ 
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, "images");
+        },
+        filename: (req, file, cb) => {
+            cb(null, Date.now() + path.extname(file.originalname)); // Generates unique filename
+        }
+    })
+});
+
+app.post("/api/upload", upload.single("file"), (req, res) => {
+    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+    res.status(200).json({ message: "Image uploaded successfully", filename: req.file.filename });
+});
+
 
 
   
