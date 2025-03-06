@@ -14,6 +14,8 @@ const commentRoute=require('./routes/comments')
 
 
 
+
+
 //database
 const connectDB=async()=>{
     try{
@@ -31,6 +33,11 @@ const connectDB=async()=>{
 //middlewares
 dotenv.config()
 app.use(express.json())
+app.use((req, res, next) => {
+    res.setHeader("Content-Security-Policy", "default-src 'self'; font-src 'self' data: https:; style-src 'self' 'unsafe-inline';");
+    next();
+});
+
 app.use("/images",express.static(path.join(__dirname,"/images")))
 app.use(cors({origin:"https://blogapp-frontend-lv2o.onrender.com",credentials:true}))
 app.use(cookieParser())
@@ -38,10 +45,7 @@ app.use("/api/auth",authRoute)
 app.use("/api/users",userRoute)
 app.use("/api/posts",postRoute)
 app.use("/api/comments",commentRoute)
-app.use((req, res, next) => {
-    res.setHeader("Content-Security-Policy", "default-src 'self'; font-src 'self' data: https:; style-src 'self' 'unsafe-inline';");
-    next();
-});
+
 
 //image upload
 const storage=multer.diskStorage({
@@ -65,4 +69,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
+
+
+  
   
