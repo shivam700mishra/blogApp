@@ -49,7 +49,7 @@ app.get("/api/test", (req, res) => {
   
 
 // app.use("/images",express.static(path.join(__dirname,"/images")))
-app.use(cors({origin:"https://blogapp-frontend-lv2o.onrender.com",credentials:true}))
+app.use(cors({origin:"https://blog-app-ivory-eight.vercel.app/",credentials:true}))
 app.use(cookieParser())
 app.use("/api/auth",authRoute)
 app.use("/api/users",userRoute)
