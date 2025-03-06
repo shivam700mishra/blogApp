@@ -1,4 +1,3 @@
-
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import {ImCross} from 'react-icons/im'
@@ -32,44 +31,46 @@ const CreatePost = () => {
         setCats(updatedCats)
     }
 
-    const handleCreate=async (e)=>{
-        e.preventDefault()
-        const post={
+    const handleCreate = async (e) => {
+      e.preventDefault();
+  
+      if (!title || !desc) {
+          alert("Title and Description are required.");
+          return;
+      }
+  
+      const post = {
           title,
           desc,
-          username:user.username,
-          userId:user._id,
-          categories:cats
-        }
-
-        if(file){
-          const data=new FormData()
-          const filename=Date.now()+file.name
-          data.append("img",filename)
-          data.append("file",file)
-          post.photo=filename
-          // console.log(data)
-          //img upload
-          try{
-            const imgUpload=await axios.post(URL+"/api/upload",data)
-            // console.log(imgUpload.data)
+          username: user.username,
+          userId: user._id,
+          categories: cats,
+      };
+  
+      try {
+          if (file) {
+              const data = new FormData();
+              data.append("file", file);
+  
+              // ✅ First, upload the image and get the correct filename from the backend
+              const imgUpload = await axios.post(URL + "/api/upload", data, {
+                  withCredentials: true,
+                  headers: { "Content-Type": "multipart/form-data" },
+              });
+  
+              if (imgUpload.data.filename) {
+                  post.photo = imgUpload.data.filename; // Use the exact filename returned
+              }
           }
-          catch(err){
-            console.log(err)
-          }
-        }
-        //post upload
-        // console.log(post)
-        try{
-          const res=await axios.post(URL+"/api/posts/create",post,{withCredentials:true})
-          navigate("/posts/post/"+res.data._id)
-          // console.log(res.data)
-
-        }
-        catch(err){
-          console.log(err)
-        }
-    }
+  
+          // ✅ Now upload the post with correct image filename
+          const res = await axios.post(URL + "/api/posts/create", post, { withCredentials: true });
+          navigate("/posts/post/" + res.data._id);
+      } catch (err) {
+          console.error("Error creating post:", err);
+      }
+  };
+  
 
 
 
