@@ -29,7 +29,28 @@ const connectDB=async()=>{
 dotenv.config()
 app.use(express.json())
 app.use("/images",express.static(path.join(__dirname,"/images")))
-app.use(cors({origin:"https://blog-app-ivory-eight.vercel.app",credentials:true}))
+// app.use(cors({origin:"https://blog-app-ivory-eight.vercel.app",credentials:true}))
+
+const allowedOrigins = [
+    "https://blog-app-ivory-eight.vercel.app", // Frontend URL
+    "https://blog-app-ivory-eight.vercel.app/" // Extra check for trailing slash issues
+  ];
+  
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("CORS policy does not allow this origin!"));
+        }
+      },
+      credentials: true,
+    })
+  );
+  
+
+
 app.use(cookieParser())
 app.use("/api/auth",authRoute)
 app.use("/api/users",userRoute)
@@ -73,7 +94,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // ✅ Image Upload Route (Ensuring correct filename)
-app.post("/api/upload", upload.single("file"), (req, res) => {
+app.post("/upload", upload.single("file"), (req, res) => {
     try {
         console.log("Uploaded Image:", req.savedFilename);
         res.status(200).json({ 
