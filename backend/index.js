@@ -10,6 +10,12 @@ const authRoute=require('./routes/auth')
 const userRoute=require('./routes/users')
 const postRoute=require('./routes/posts')
 const commentRoute=require('./routes/comments')
+import cors from "cors";
+app.use(cors({
+  origin: "https://blogapp-frontend-lv2o.onrender.com",
+  credentials: true
+}));
+
 
 //database
 const connectDB=async()=>{
