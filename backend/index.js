@@ -38,6 +38,10 @@ app.use("/api/auth",authRoute)
 app.use("/api/users",userRoute)
 app.use("/api/posts",postRoute)
 app.use("/api/comments",commentRoute)
+app.use((req, res, next) => {
+    res.setHeader("Content-Security-Policy", "default-src 'self'; font-src 'self' data: https:; style-src 'self' 'unsafe-inline';");
+    next();
+});
 
 //image upload
 const storage=multer.diskStorage({
