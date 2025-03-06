@@ -30,6 +30,8 @@ const connectDB=async()=>{
 
 
 
+
+
 //middlewares
 dotenv.config()
 app.use(express.json())
@@ -37,8 +39,16 @@ app.use((req, res, next) => {
     res.setHeader("Content-Security-Policy", "default-src 'self'; font-src 'self' data: https:; style-src 'self' 'unsafe-inline';");
     next();
 });
+app.get("/", (req, res) => {
+    res.send("Backend is running successfully!");
+  });
+  
+app.get("/api/test", (req, res) => {
+    res.json({ message: "API is working!" });
+  });
+  
 
-app.use("/images",express.static(path.join(__dirname,"/images")))
+// app.use("/images",express.static(path.join(__dirname,"/images")))
 app.use(cors({origin:"https://blogapp-frontend-lv2o.onrender.com",credentials:true}))
 app.use(cookieParser())
 app.use("/api/auth",authRoute)
