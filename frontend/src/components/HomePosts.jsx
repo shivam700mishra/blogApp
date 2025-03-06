@@ -10,7 +10,7 @@ const HomePosts = ({post}) => {
     <div className="w-[35%] h-[200px] flex justify-center items-center">
     {/* <img src={IF+post.photo} alt="" className="h-full w-full object-cover"/> */}
     {/* console.log(post.photo); */}
-    <img src={`http://localhost:5000/images/${post.photo}`} alt="Post Image" className="h-full w-full object-cover"/>
+    <img src={`https://blog-app-backend-six-rho.vercel.app/images/${post.photo}`} alt="Post Image" className="h-full w-full object-cover"/>
 
     </div>
     {/* right */}
