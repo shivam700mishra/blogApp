@@ -94,7 +94,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // ✅ Image Upload Route (Ensuring correct filename)
-app.post("/upload", upload.single("file"), (req, res) => {
+app.post("/api/upload", upload.single("file"), (req, res) => {
     try {
         console.log("Uploaded Image:", req.savedFilename);
         res.status(200).json({ 
